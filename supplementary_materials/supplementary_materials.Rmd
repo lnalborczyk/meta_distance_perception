@@ -1,0 +1,1012 @@
+---
+title: "Supplement to Action Effects on Visual Perception of Distances: A Multilevel Bayesian Meta-Analysis"
+
+shorttitle: "Supplementary Materials"
+
+author: 
+  - name: "Lisa Molto"
+    #affiliation: "1"
+    corresponding: yes
+    address: "Laboratoire de Psychologie et Neurocognition, Univ. Grenoble Alpes, 1251 avenue centrale, 38058 Grenoble Cedex 9, France"
+    email: "lisa.molto@univ-grenoble-alpes.fr"
+  - name: "Ladislas Nalborczyk"
+    #affiliation : "1,2"
+    email: "ladislas.nalborczyk@gmail.com"
+  - name: "Richard Palluel-Germain"
+    #affiliation : "1"
+    email: "richard.palluel-germain@univ-grenoble-alpes.fr"
+  - name: "Nicolas Morgado"
+    #affiliation : "3"
+    email: "nicolasmorgado-univparisnanterre@outlook.fr"
+
+affiliation:
+  - id            : "1"
+    institution   : "Univ. Grenoble Alpes, CNRS, LPNC, 38000 Grenoble, France"
+  - id            : "2"
+    institution   : "Department of Experimental Clinical and Health Psychology, Ghent University"
+  - id            : "3"
+    institution   : "Univ. Paris Nanterre, Centre de Recherche sur le Sport et le Mouvement, Nanterre, France"
+
+bibliography: r-references.bib
+figsintext: true
+class: doc
+
+output:
+    html_document:
+        toc: true
+        toc_float: true
+        number_sections: true
+        fig_width: 6
+        fig_height: 6
+        fig_caption: true
+        theme: cosmo # sandstone
+        highlight: kate
+        code_folding: hide
+    papaja::apa6_pdf:
+        toc: true
+        toc_depth: 3
+        highlight: default
+        number_sections: true
+
+header-includes:
+   - \usepackage{graphicx,pdflscape}
+   - \usepackage{geometry}
+   - \usepackage{float}
+---
+
+\newpage
+
+```{r setup, include = FALSE, results = "hide", warning = FALSE, message = FALSE}
+library(bridgesampling)
+library(hrbrthemes)
+library(patchwork)
+library(tidyverse)
+library(magrittr)
+library(papaja)
+library(readxl)
+library(knitr)
+library(here)
+library(brms)
+
+# setting graphical parameters
+knitr::opts_knit$set(global.par = TRUE)
+
+# setting chunck options
+knitr::opts_chunk$set(cache = TRUE, echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r functions}
+#############################################################
+# Computing Hedges'g for between-subject design
+####################################################
+
+correcinter <- function(n1, n2) {
+    
+  J <- (1 - (3 / (4 * (n1 + n2 - 2) - 1) ) )
+  
+}
+
+dinter <- function(m1, m2, sd1, sd2, n1, n2) {
+  
+    dcalc <- (m1 - m2) / (sqrt( ( ( (n1 - 1) * sd1^2) + ( (n2 - 1) * sd2^2) ) / (n1 + n2 - 2) ) )
+
+}
+
+ginter <- function(m1, m2, sd1, sd2, n1, n2, J) {
+  
+    gcalc <- J * (m1 - m2) / (sqrt( ( ( (n1 - 1) * sd1^2) + ( (n2 - 1) * sd2^2) ) / (n1 + n2 - 2) ) )
+    
+}
+
+vinter <- function(d, n1, n2, J) {
+  
+    vi <- J^2 * (n1 + n2) / (n1 * n2) + d^2 / (2 * (n1 + n2) )
+    
+}
+
+#############################################################
+# Computing Hedges'g for within-subject design
+####################################################
+
+correcintra <- function(n) {
+    
+  J <- 1 - (3 / (4 * (n - 1) - 1) )
+  
+}
+
+dintra <- function(m1, m2, sd1, sd2, n, r) {
+  
+    dcalc <- (m1 - m2) / ( (sqrt(sd1^2 + sd2^2 - 2 * r * sd1 * sd2) ) / sqrt(2 * (1 - r) ) )
+    
+}
+
+gintra <- function(m1, m2, sd1, sd2, n, r, J) {
+  
+    gcalc <- J * (m1 - m2) / ( (sqrt(sd1^2 + sd2^2 - 2 * r * sd1 * sd2) ) / sqrt(2 * (1 - r) ) )
+
+}
+
+vintra <- function(d, n, r, J) {
+    
+  vi <- J^2 * (1 / n + d^2 / (2 * n) ) * 2 * (1 - r)
+
+}
+```
+
+```{r import}
+#########################################################
+# Importing and formatting data
+##########################################
+
+data <- read_excel(here("data", "code_data.xlsx"), sheet = "code")
+data.m <- read_excel(here("data", "code_data_moderators.xlsx"), sheet = "code")
+
+data %<>%
+    mutate(J = ifelse(Design == 0, correcinter(n1, n2), correcintra(n) ) ) %>%
+    mutate(d1 = ifelse(Design == 0, dinter(m1, m2, sd1, sd2, n1, n2), dintra(m1, m2, sd1, sd2, n, r) ) ) %>%
+    gather(val, d, d1, di, na.rm = TRUE) %>%
+    # computing Hedge's g
+    mutate(g = J * d) %>%
+    # computing variance
+    mutate(ser = ifelse(Design == 0, vinter(d, n1, n2, J), vintra(d, n, r, J) ) ) %>%
+    gather(valeur, vi, ser, na.rm = TRUE) %>%
+    # creating an index for studies
+    mutate(study = 1:nrow(.) ) %>%
+    # creating an index for articles
+    mutate(article = paste0(.$authors, " (", .$year, ")") )%>%
+    mutate(space = ifelse(min > 100, "loin", "proche") )
+
+data.m %<>%
+    mutate(J = ifelse(Design == 0, correcinter(n1, n2), correcintra(n) ) ) %>%
+    mutate(d1 = ifelse(Design == 0, dinter(m1, m2, sd1, sd2, n1, n2), dintra(m1, m2, sd1, sd2, n, r) ) ) %>%
+    gather(val, d, d1, di, na.rm = TRUE) %>%
+    # computing Hedge's g
+    mutate(g = J * d) %>%
+    # computing variance
+    mutate(ser = ifelse(Design == 0, vinter(d, n1, n2, J), vintra(d, n, r, J) ) ) %>%
+    gather(valeur, vi, ser, na.rm = TRUE) %>%
+    # creating an index for studies
+    mutate(study = 1:nrow(.) ) %>%
+    # creating an index for articles
+    mutate(article = paste0(.$authors, " (", .$year, ")") ) 
+```
+
+# The meta-analytic model
+
+Let $y_{ij}$ be the effect size of the $i$th study in the $j$th article. Then, the 3-levels meta-analytic model can be written as:
+
+$$
+\begin{aligned}
+y_{ij} &\sim \mathrm{Normal}(\mu_{ij}, \sigma_{ij}) \\
+\mu_{ij} &= \alpha + \alpha_{article[j]} + \alpha_{study[ij]} \\
+\alpha_{study[ij]} &\sim \mathrm{Normal}(0, \tau_{s}) \\
+\alpha_{article[j]} &\sim \mathrm{Normal}(0, \tau_{a}) \\
+\end{aligned}
+$$
+
+Where $\sigma_{ij}^{2}$ is the known sampling variance of the $i$th study in the $j$th article and $\alpha$ is the population effect size. The index $\alpha_{study[ij]}$ indicates the intercept corresponding to study $i$ in article $j$ (which is the average effect size in this study), and $\alpha_{article[j]}$ indicates the intercept for article $j$ (which is the average effect size in this article). In addition to the sampling variance, there are two other sources of variation: the variance of the effect between studies $\text{Var}(\alpha_{study}) = \tau_{s}^{2}$ (level-2), and the variance of the effect between articles $\text{Var}(\alpha_{article}) = \tau_{a}^{2}$ (level-3).
+
+## Fitting the model
+
+We can then write the full Bayesian model, including the priors for $\alpha$ (the intercept) and the variance components. The intercept of the model estimates the overall effect and is given an midly informative normal prior. The variance components $\tau_{s}$ and $\tau_{a}$ have midly informative Half-Cauchy priors, ensuring that very large values (which are implausible for the scale of $y_{ij}$), receive less prior weight.
+
+$$
+\begin{aligned}
+y_{ij} &\sim \mathrm{Normal}(\mu_{ij}, \sigma_{ij}) \\
+\mu_{ij} &= \alpha + \alpha_{article[j]} + \alpha_{study[ij]} \\
+\alpha_{study[ij]} &\sim \mathrm{Normal}(0, \tau_{s}) \\
+\alpha_{article[j]} &\sim \mathrm{Normal}(0, \tau_{a}) \\
+\alpha &\sim \mathrm{Normal}(0, 1) \\
+\tau_{s}, \tau_{a} &\sim \mathrm{HalfCauchy}(0, 0.1) \\
+\end{aligned}
+$$
+
+This model can easily be fitted using the `brms` package [@R-brms], with an lme4-like syntax.
+
+```{r, echo = TRUE, results = "hide"}
+library(tidyverse)
+library(brms)
+
+# setting the seed for reproducibility
+set.seed(123)
+
+# defining the priors
+prior1 <- c(
+    prior(normal(0, 1), coef = intercept),
+    prior(cauchy(0, 0.1), class = sd)
+    )
+
+bmod1 <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + (1|article) + (1|study),
+    data = data,
+    prior = prior1,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+## Retrieving the estimates
+
+We then extract the posterior mean and 95% credible intervals of the previous model using the `tidy()` function of the `broom` package [@R-broom].
+
+```{r, echo = TRUE}
+library(broom)
+tidy(bmod1, parameters = c("^b_", "^sd_"), prob = 0.95)
+```
+
+We can interpret the intercept estimate by saying that the most credible value of the effect size is `r round(brms::fixef(bmod1)[1], 2)`, and that there is a 95% probability (given the data and the model) that the population effect size lies in the [`r round(brms::fixef(bmod1)[3], 2)`, `r round(brms::fixef(bmod1)[4], 2)`] interval.
+
+## Leave-one-out analysis
+
+We then use leave-one-out analyses to investigate the influence of single studies on the obtained meta-analytic average effect. Basically, we fit again the main model by using all studies but one, doing this for all studies.
+
+```{r, echo = TRUE, results = "hide"}
+article_names <- sort(unique(data$article) )
+bmods <- setNames(vector("list", length(article_names) ), article_names)
+
+for (i in seq_along(article_names) ) {
+
+  print(article_names[i])
+  subdata <- droplevels(subset(data, article != article_names[i]) )
+
+  capture.output({bmods[[i]] <- update(bmod1, newdata = subdata)})
+
+}
+```
+
+Below we extract all the computed intercepts and report the `min` and `max` values of these intercepts, as an indication of the *robustness* of the main estimate.
+
+```{r, echo = TRUE, results = "hide"}
+intercepts_LOO <- as.numeric(unlist(lapply(bmods, function(x) brms::fixef(x)[1]) ) )
+range(intercepts_LOO)
+```
+
+Inspection of these results reveals that Lessard et al. (2009)' is strongly deviant from other studies, with a reported effect size of g = 2.42. In the following, all analyses are carried out without this study.
+
+```{r, echo = TRUE, results = "hide"}
+# removing Lessard et al. (2009)
+data %<>% filter(authors != "Lessard et al.")
+data.m %<>% filter(authors != "Lessard et al.")
+
+# fitting the model again
+bmod1 <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + (1|article) + (1|study),
+    data = data,
+    prior = prior1,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+We then extract the posterior mean and 95% credible intervals of the updated general meta-analytic model.
+
+```{r, echo = TRUE}
+tidy(bmod1, parameters = c("^b_", "^sd_"), prob = 0.95)
+```
+
+We can interpret the intercept estimate by saying that the most credible value of the effect size is `r round(brms::fixef(bmod1)[1], 2)`, and that there is a 95% probability (given the data and the model) that the population effect size lies in the [`r round(brms::fixef(bmod1)[3], 2)`, `r round(brms::fixef(bmod1)[4], 2)`] interval.
+
+## Hypothesis testing
+
+We can test the hypothesis that the intercept is equal to 0 by comparing a model with the intercept and a model without the intercept (i.e., with the intercept value fixed to 0). We compare these models using the `bayes_factor()` method [that uses the `bridgesampling` package, @R-bridgesampling].
+
+```{r, echo = TRUE, results = "hide"}
+prior0 <- prior(cauchy(0, 0.1), class = sd)
+
+bmod0 <- brm(
+    g | se(sqrt(vi) ) ~ 0 + (1|article) + (1|study),
+    data = data,
+    prior = prior0,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+
+bf_intercept <- bayes_factor(
+    bmod0, bmod1,
+    repetitions = 1e2, cores = parallel::detectCores()
+    )
+```
+
+The Bayes Factor is given by `bf_intercept$bf_median_based` (median estimate based on 100 simulations) and is approximately equal to $BF_{10} = \dfrac{1}{BF_{01}}$ = `r 1 / bf_intercept$bf_median_based`.
+
+## Forest plot of the main model
+
+The next figure depicts the estimates of the above model, where densities represent the estimation of the model (i.e., the posterior distibution), along with its mean and the 95% credible interval.
+
+```{r forest, echo = TRUE, dev = "pdf", results = "hide", fig.pos = "H", fig.height = 10, fig.width = 10, fig.cap = "Forest plot of effect sizes. The densities represent the estimation of the model: the posterior distribution, along with its mean and 95% credible interval. Raw data (for each experiment) are represented by the stars."}
+# installing (if needed) and loading the brmstools package
+if(!require(brmstools) ) devtools::install_github("mvuorre/brmstools")
+library(brmstools)
+
+# sourcing a slightly modified version of Matti Vuorre's function
+source(here("code", "forest.R") )
+
+# fitting the main model (with the intercept)
+prior1_forest <- c(
+    prior(normal(0, 1), class = Intercept),
+    prior(cauchy(0, 0.1), class = sd)
+    )
+
+bmod1_forest <- brm(
+    g | se(sqrt(vi) ) ~ 1 + (1|article) + (1|study),
+    data = data,
+    prior = prior1_forest,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+
+# making the forest plot
+forest(
+    bmod1_forest, grouping = "article", theme_forest = FALSE,
+    show_data = TRUE, sort = FALSE, av_name = "Overall effect size"
+    ) +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 10, plot_title_size = 12, axis_text_size = 9
+        ) +
+    xlab("Effect size (Hedge's g)") +
+    ylab("") +
+    xlim(-0.5, 2)
+
+```
+
+## Estimation by constraint manipulation
+
+We previously provided an estimate of the global effect size of action constraint on distance perception. Below, we estimate the effect size based on the action constraint manipulation by including `manipulation` as a categorical predictor in the model. We have three categories of manipulation that are: tool-use, weight, and effort. In this model the intercept represents the average effect size corresponding to the `Effort` manipulation, and the $\beta$s for `Tool-use` and `Weight` represent deviations from this condition.
+
+```{r, echo = TRUE, results = "hide"}
+data.constraint <- data %>% filter(manipulation != "other")
+
+prior2 <- c(
+    prior(normal(0, 1), coef = "intercept"),
+    prior(normal(0, 1), class = b),
+    prior(cauchy(0, 0.1), class = sd)
+    )
+
+bmod_manip <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + manipulation + (1|article) + (1|study),
+    data = data,
+    prior = prior2,
+    sample_prior = TRUE,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+Below we retrieve samples from the posterior distribution using the `posterior_samples()` function. Then, we can use these posterior samples to compare each pair of conditions.
+
+```{r, echo = TRUE, results = "hide"}
+# retrieving the posterior samples
+post_manip <- posterior_samples(bmod_manip, pars = "^b_")
+
+# difference between effort and tool-use
+contrast1 <- post_manip[, 1]  - (post_manip[, 1] + post_manip[, 2])
+
+# difference between effort and weight
+contrast2 <- post_manip[, 1]  - (post_manip[, 1] + post_manip[, 3])
+
+# difference between tool-use and weight
+contrast3 <- (post_manip[, 1] + post_manip[, 2]) - (post_manip[, 1] + post_manip[, 3])
+```
+
+```{r, echo = FALSE}
+hc1 <- hypothesis(bmod_manip, "intercept = (intercept + manipulationtool.use)", seed = 123)
+hc2 <- hypothesis(bmod_manip, "intercept = (intercept + manipulationweight)", seed = 123)
+hc3 <- hypothesis(bmod_manip, "(intercept + manipulationtool.use) = (intercept + manipulationweight)", seed = 123)
+```
+
+```{r, results = "hide"}
+effort_effect <- hypothesis(bmod_manip, "intercept = 0", seed = 123)
+tool.use_effect <- hypothesis(bmod_manip, "(intercept + manipulationtool.use) = 0", seed = 123)
+weight_effect <- hypothesis(bmod_manip, "(intercept + manipulationweight) = 0", seed = 123)
+
+bmod_manip_est <- tidy(bmod_manip, parameters = c("^b_", "^sd_"), prob = 0.95)
+```
+
+We then compute Bayes factors for each contrast using the `hypothesis()` method. This analysis reveals moderate evidence for an absence of difference between `Tool-use` and `Weight` ($\beta$ = `r hc3$hypothesis$Estimate`, 95% CrI [`r hc3$hypothesis[, 3]`, `r hc3$hypothesis[, 4]`, $BF_{01}$ = `r hc3$hypothesis$Evid.Ratio`), moderate evidence for an absence of difference between `Effort` and `Weight` ($\beta$ = `r hc2$hypothesis$Estimate`, 95% CrI [`r hc2$hypothesis[, 3]`, `r hc2$hypothesis[, 4]`, $BF_{01}$ = `r hc2$hypothesis$Evid.Ratio`), and moderate evidence for an absence of difference between `Effort` and `Tool-use` ($\beta$ = `r hc1$hypothesis$Estimate`, 95% CrI [`r hc1$hypothesis[, 3]`, `r hc1$hypothesis[, 4]`, $BF_{01}$ = `r hc1$hypothesis$Evid.Ratio`). We also test the null hypothesis for each constraint manipulation. This reveals moderate evidence for the hypothesis of no effect of weight manipulation ($\beta$ = `r weight_effect$hypothesis$Estimate`, 95% CrI [`r weight_effect$hypothesis$CI.Lower`, `r weight_effect$hypothesis$CI.Upper`], $BF_{01}$ = `r weight_effect$hypothesis$Evid.Ratio`). However, this analysis also reveals moderate to strong evidence for an effect of the AC manipulation (tool-use: $BF_{10}$ = `r 1 / tool.use_effect$hypothesis$Evid.Ratio` and effort: $BF_{10}$ = `r 1 / effort_effect$hypothesis$Evid.Ratio`).
+
+```{r, fig.pos = "H", dev = "pdf", out.width = "75%", fig.align = "center", fig.cap = "Posterior distribution of effect size by constraint manipulation."}
+# retrieving the posterior samples
+posterior_samples(bmod_manip, pars = "^b_") %>%
+    # retrieving the by-condition posterior samples
+    mutate(
+        tool.use = b_intercept + b_manipulationtool.use,
+        weight = b_intercept + b_manipulationweight,
+        effort = b_intercept
+        ) %>%
+    # eeping only the relevant columns
+    select(tool.use:effort) %>%
+    # reshaping the data set
+    gather(key = "condition", value = "value", tool.use:effort) %>%
+    ggplot(aes(x = value, linetype = condition) ) +
+    geom_vline(xintercept = 0, linetype = 2, size = 0.5) +
+    geom_line(stat = "density", size = 0.5) +
+    xlab("Effect size") +
+    ylab("Density") +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 10, plot_title_size = 12, axis_text_size = 9
+        ) +
+    scale_linetype_manual(
+        values = c("dotted", "dashed", "solid"),
+        labels = c("Effort", "Tool use", "Weight")
+        ) +
+    theme(
+        legend.title = element_blank(), legend.position = c(0.8, 0.8),
+        legend.background = element_rect(colour = "gray")
+        )
+```
+
+```{r, results = "hide"}
+# number of studies by condition
+k_tool.use <- sum(data$manipulation == "tool.use")
+k_weight <- sum(data$manipulation == "weight")
+k_effort <- sum(data$manipulation == "effort")
+
+# number of participants by condition
+n_tool.use <- sum(data$n[data$manipulation == "tool.use"])
+n_weight <- sum(data$n[data$manipulation == "weight"])
+n_effort <- sum(data$n[data$manipulation == "effort"])
+
+# total sample size
+total_n <- sum(data$n)
+```
+
+# Moderators analyses
+
+We then fit one model by moderator (meta-regression models) using contrast codes for the research `design`, the `motor` intention, and `space`.
+
+```{r, echo = TRUE, results = "hide"}
+# removing "size" measure
+data.measure <- data.m %>% filter(Measure != "Size")
+
+# contrast coding the moderators
+data$design.c <- ifelse(data$Design == 0, -0.5, 0.5)
+data.m$motor.c <- ifelse(data.m$motor_i == 0, -0.5, 0.5)
+data$space.c <- ifelse(data$space == "proche", -0.5, 0.5)
+```
+
+## Research design
+
+We fit a new model including `design` as a contrast-coded (-0.5, 0.5) predictor and assign it a midly informative normal prior.
+
+```{r, echo = TRUE, results = "hide"}
+bmod_design <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + design.c + (1|article) + (1|study),
+    data = data,
+    prior = prior2,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+Estimations from this model can be retrieved using the `tidy()` function, as previously.
+
+```{r, echo = TRUE}
+(bmod_design_est <- tidy(bmod_design, parameters = c("^b_", "^sd_"), prob = 0.95) )
+```
+
+We can test the hypothesis of no difference between the two conditions following the same strategy as previously by comparing the previous model (`bmod_design`) to the intercept-only model.
+
+```{r, echo = TRUE, results = "hide"}
+bf_design <- bayes_factor(
+    bmod1, bmod_design,
+    repetitions = 1e2, cores = parallel::detectCores()
+    )
+```
+
+There is only anecdotal evidence for an absence of difference between the two conditions ($\beta$ = `r bmod_design_est[bmod_design_est$term == "b_design.c", "estimate"]`, 95% CrI [`r bmod_design_est[bmod_design_est$term == "b_design.c", "lower"]`, `r bmod_design_est[bmod_design_est$term == "b_design.c", "upper"]`], $BF_{01}$ = `r bf_design$bf_median_based`).
+
+```{r, results = "hide"}
+# number of articles by condition
+k_design1 <- sum(data$Design == "1")
+k_design2 <- sum(data$Design == "0")
+
+# number of participants by condition
+n_design1 <- sum(data$n[data$Design == "1"])
+n_design2 <- sum(data$n[data$Design == "0"])
+```
+
+## Measures
+
+We then fit a second model, including `measures` as a categorical predictor. One advantage of the Bayesian approach is that we can compare conditions (i.e., the different levels of the `measure` factor) directly from the joint posterior distribution by computing the posterior distribution of the difference.
+
+```{r, echo = TRUE, results = "hide"}
+bmod_measure <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + Measure + (1|article) + (1|study),
+    data = data.measure,
+    prior = prior2,
+    sample_prior = TRUE,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+```{r, echo = TRUE}
+(bmod_measure_est <- tidy(bmod_measure, parameters = c("^b_", "^sd_"), prob = 0.95) )
+```
+
+In this model the intercept represents the condition `MeasureAction`, and the $\beta$s for `MeasureVerbal` and `MeasureVm` represent deviations from this condition. Below we retrieve samples from the posterior distribution using the `posterior_samples()` function.
+
+```{r, echo = TRUE}
+post <- posterior_samples(bmod_measure, pars = "^b_")
+head(post)
+```
+
+Then, we can use these posterior samples to compare the conditions with each other.
+
+```{r, echo = TRUE, results = "hide"}
+# difference between verbal and vm
+c1 <- (post[, 1] + post[, 2]) - (post[, 1] + post[, 3])
+
+# difference between verbal and action
+c2 <- (post[, 1] + post[, 2]) - post[, 1]
+
+# difference between action and vm
+c3 <- post[, 1] - (post[, 1] + post[, 3])
+```
+
+We can plot the posterior distribution corresponding to each *contrast*, using the `BEST` package [@R-BEST]. Below, we plot the contrast `c1`, which represents the comparison of the `verbal` and `vm` conditions.
+
+```{r, echo = TRUE, dev = "pdf", out.width = "50%", results = "hide", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the difference between verbal and vm."}
+library(BEST)
+par(cex = 0.75, cex.lab = 0.75)
+plotPost(c1, credMass = 0.95, compVal = 0, col = "#b3cde0")
+```
+
+We can then compute the Bayes Factor for this difference using the `hypothesis()` function.
+
+```{r, echo = TRUE}
+hypothesis(
+    bmod_measure, "(intercept + MeasureVerbal) = (intercept + MeasureVm)",
+    seed = 123
+    )
+```
+
+We can then follow the same strategy for the two other contrasts, `c2` and `c3`, by plotting the posterior distribution of the difference between the two conditions.
+
+```{r, echo = TRUE, results = "hide", dev = "pdf", out.width = "50%", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the contrast."}
+par(cex = 0.75, cex.lab = 0.75)
+plotPost(c2, credMass = 0.95, compVal = 0, col = "#b3cde0")
+plotPost(c3, credMass = 0.95, compVal = 0, col = "#b3cde0")
+```
+
+We then compute the Bayes Factor for these differences using the `hypothesis()` function, as previously.
+
+```{r, echo = TRUE}
+hypothesis(
+    bmod_measure, "(intercept) = (intercept + MeasureVerbal)",
+    seed = 123
+    )
+
+hypothesis(
+    bmod_measure, "(intercept) = (intercept + MeasureVm)",
+    seed = 123
+    )
+```
+
+```{r}
+# number of articles by condition
+k_measure_vm <- sum(data.m$Measure == "Vm")
+k_measure_verbal <- sum(data.m$Measure == "Verbal")
+k_measure_action <- sum(data.m$Measure == "Action")
+
+# number of participants by condition
+n_measure_vm <- sum(data.m$n[data.m$Measure == "Vm"])
+n_measure_verbal <- sum(data.m$n[data.m$Measure == "Verbal"])
+n_measure_actio <- sum(data.m$n[data.m$Measure == "Action"])
+```
+
+## Motor intention
+
+As previously, we can fit a new model including `motor intention` as a contrast-coded categorical predictor with a midly informative normal prior.
+
+```{r, echo = TRUE, results = "hide"}
+bmod_motor <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + motor.c + (1|article) + (1|study),
+    data = data.m,
+    prior = prior2,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+```{r, echo = TRUE}
+(bmod_motor_est <- tidy(bmod_motor, parameters = c("^b_", "^sd_"), prob = 0.95) )
+```
+
+We can then test whether the difference between the two conditions is equal to zero, following the same strategy as previously.
+
+```{r, echo = TRUE, results = "hide"}
+bf_motor <- bayes_factor(
+    bmod1, bmod_motor,
+    repetitions = 1e2, cores = parallel::detectCores()
+    )
+```
+
+There is strong evidence for an absence of difference between the two conditions ($\beta$ = `r bmod_motor_est[bmod_motor_est$term == "b_motor.c", "estimate"]`, 95% CrI [`r bmod_motor_est[bmod_motor_est$term == "b_motor.c", "lower"]`, `r bmod_motor_est[bmod_motor_est$term == "b_motor.c", "upper"]`], $BF_{01}$ = `r bf_motor$bf_median_based`).
+
+```{r}
+# number of articles by condition
+k_no.intention <- sum(data.m$motor_i == "0")
+k_intention <- sum(data.m$motor_i == "1")
+
+# number of participants by condition
+n_no.intention <- sum(data.m$n[data.m$motor_i == "0"])
+n_intention <- sum(data.m$n[data.m$motor_i == "1"])
+```
+
+## Distance from target
+
+We fit below a new model including target presence (`space.c`) as a contrast-coded (-0.5, 0.5) categorical predictor, and assign it a midly informative normal prior.
+
+```{r, echo = TRUE, results = "hide"}
+bmod_space <- brm(
+    g | se(sqrt(vi) ) ~ 0 + intercept + space.c + (1|article) + (1|study),
+    data = data,
+    prior = prior2,
+    sample_prior = FALSE,
+    save_all_pars = TRUE,
+    chains = 4,
+    warmup = 5000,
+    iter = 20000,
+    cores = parallel::detectCores(),
+    control = list(adapt_delta = .99)
+    )
+```
+
+Estimations of this model can be retrieved using the `tidy()` function.
+
+```{r, echo = TRUE}
+(bmod_space_est <- tidy(bmod_space, parameters = c("^b_", "^sd_"), prob = 0.95) )
+```
+
+We can test whether the difference between the two conditions is equal to zero by computing a Bayes Factor using the `bayes_factor()` method.
+
+```{r, echo = TRUE, results = "hide"}
+bf_space <- bayes_factor(bmod1, bmod_space, repetitions = 1e2, cores = parallel::detectCores() )
+```
+
+There is only anecdotal evidence for an absence of difference between the two conditions ($\beta$ = `r bmod_space_est[bmod_space_est$term == "b_space.c", "estimate"]`, 95% CrI [`r bmod_space_est[bmod_space_est$term == "b_space.c", "lower"]`, `r bmod_space_est[bmod_space_est$term == "b_space.c", "upper"]`], $BF_{01}$ = `r bf_space$bf_median_based`). Below, we plot the marginal posterior distribution of the effect size by condition, for each moderator.
+
+```{r}
+# number of articles by condition
+k_proche <- sum(data$space == "proche")
+k_loin <- sum(data$space == "loin")
+
+# number of participants by condition
+n_proche <- sum(data$n[data$space == "proche"])
+n_loin <- sum(data$n[data$space == "loin"])
+```
+
+```{r, echo = FALSE, dev = "pdf", results = "hide", fig.align = "center", fig.width = 10, fig.height = 10, fig.pos = "H", fig.cap = "Posterior distribution of the effect size by condition."}
+# plotting it for the design moderator
+p_design <- 
+    posterior_samples(bmod_design, pars = "^b_") %>%
+    mutate(
+        within = b_intercept + 0.5 * b_design.c,
+        between = b_intercept - 0.5 * b_design.c
+        ) %>%
+    select(within:between) %>%
+    gather(key = "condition", value = "value", within:between) %>%
+    ggplot(aes(x = value, linetype = condition) ) +
+    geom_line(stat = "density", size = 0.75) +
+    xlab("Effect size") +
+    ylab("Density") +
+    ggtitle("Research design") +
+    theme_ipsum(base_family = "Helvetica", base_size = 10, plot_title_size = 12, axis_text_size = 9) +
+    scale_linetype_manual(
+        values = c("dotted", "solid"),
+        labels = c("Between", "Within")
+        ) +
+    theme(
+        legend.title = element_blank(), legend.position = c(0.8, 0.8),
+        legend.background = element_rect(colour = "gray")
+        )
+
+# plotting it for the measure moderator
+p_measure <- 
+    posterior_samples(bmod_measure, pars = "^b_") %>%
+    mutate(
+        verbal = b_intercept + b_MeasureVerbal,
+        action = b_intercept,
+        visual_matching = b_intercept + b_MeasureVm
+        ) %>%
+    select(verbal:visual_matching) %>%
+    gather(key = "condition", value = "value", verbal:visual_matching) %>%
+    ggplot(aes(x = value, linetype = condition) ) +
+    geom_line(stat = "density", size = 0.75) +
+    xlab("Effect size") +
+    ylab("Density") +
+    ggtitle("Measure") +
+    theme_ipsum(base_family = "Helvetica", base_size = 10, plot_title_size = 12, axis_text_size = 9) +
+    scale_linetype_manual(
+        values = c("dotted", "dashed", "solid"),
+        labels = c("Action", "Verbal", "Visual matching")
+        ) +
+    theme(
+        legend.title = element_blank(), legend.position = c(0.8, 0.8),
+        legend.background = element_rect(colour = "gray")
+    )
+
+# plotting it for the motor intention moderator
+p_motor <- 
+    posterior_samples(bmod_motor, pars = "^b_") %>%
+    mutate(
+        no_intention = b_intercept + 0.5 * b_motor.c,
+        with_intention = b_intercept - 0.5 * b_motor.c
+        ) %>%
+    select(no_intention:with_intention) %>%
+    gather(key = "condition", value = "value", no_intention:with_intention) %>%
+    ggplot(aes(x = value, linetype = condition) ) +
+    geom_line(stat = "density", size = 0.75) +
+    xlab("Effect size") +
+    ylab("Density") +
+    ggtitle("Motor intention") +
+    theme_ipsum(base_family = "Helvetica", base_size = 10, plot_title_size = 12, axis_text_size = 9) +
+    scale_linetype_manual(
+        values = c("dotted", "solid"),
+        labels = c("No intention", "With intention")
+        ) +
+    theme(
+        legend.title = element_blank(), legend.position = c(0.8, 0.8),
+        legend.background = element_rect(colour = "gray")
+    )
+
+# plotting it for the space moderator
+p_space <- 
+    posterior_samples(bmod_space, pars = "^b_") %>%
+    mutate(
+        close = b_intercept - 0.5 * b_space.c,
+        far = b_intercept + 0.5 * b_space.c
+        ) %>%
+    select(close:far) %>%
+    gather(key = "condition", value = "value", close:far) %>%
+    ggplot(aes(x = value, linetype = condition) ) +
+    geom_line(stat = "density", size = 0.75) +
+    xlab("Effect size") +
+    ylab("Density") +
+    ggtitle("Distance from target") +
+    theme_ipsum(base_family = "Helvetica", base_size = 10, plot_title_size = 12, axis_text_size = 9) +
+    scale_linetype_manual(
+        values = c("dotted", "solid"),
+        labels = c("Near", "Far")
+        ) +
+    theme(
+        legend.title = element_blank(), legend.position = c(0.8, 0.8),
+        legend.background = element_rect(colour = "gray")
+        )
+
+# combining plots
+p_design + p_measure + p_motor + p_space + plot_layout(ncol = 2)
+```
+
+# Additional analyses
+
+## Publication bias
+
+If there is no publication bias, the funnel plot should look symmetric with outcomes dispersed equally on both sides of the average effect size. However, if studies with null results are missing, the funnel plot might look asymmetric with studies on the left side of the mean estimate missing.
+
+```{r funnel1, echo = TRUE, dev = "pdf", out.width = "75%", fig.align = "center", fig.pos = "H", fig.cap = "Funnel plot with effect sizes on x-axis and standard errors on the y-axis."}
+library(metaviz)
+library(metafor)
+
+# create the funnel plot from a metafor model (for convenience)
+res <- rma(yi = g, vi, data = data, measure = "GEN")
+
+# customised ggplot2 funnel plot
+source(here("code", "funnel_viz2.R") )
+
+viz_funnel2(
+    x = res, method = "REML",
+    contours = TRUE, sig_contours = FALSE,
+    contours_col = "Greys", xlab = "Observed outcome"
+    ) +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 10, plot_title_size = 12, axis_text_size = 9
+        )
+```
+
+Below, we make a contour-enhanced funnel plot, allowing to distinguish patterns of significance in published studies.
+
+```{r funnel2, echo = TRUE, dev = "pdf", out.width = "75%", fig.align = "center", fig.pos = "H", fig.cap = "Contour-enhanced funnel plot with effect sizes on x-axis and standard errors on the y-axis. Ranges of p-values from the experiments are indicated by the shaded regions. White region inside the funnel corresponds to p-values greater than .10, the gray-shaded region corresponds to p-values between .05 and .01, and the region outside of the funnel corresponds to p-values below .01."}
+viz_funnel(
+    x = res, method = "REML",
+    contours = FALSE, sig_contours = TRUE, detail_level = 1,
+    contours_col = "Greys",
+    xlab = "Observed outcome"
+    ) +
+    geom_vline(xintercept = 0, linetype = 2) +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 10, plot_title_size = 12, axis_text_size = 9
+        )
+```
+
+## P-curve
+
+P-curve analyses test whether a set of p-values supports the existence of an effect. If there is no effect, p-values should be uniformly distributed, whereas if there is an effect, p-values distribution should be right-skewed, with more p-values close to .01 than .05. The observed distribution of p-values from our database is close to a distribution that would be expected with a *true* non-null effect, although it does not differ significantly from the distribution of p-values we would expect for a small effect size and a power of 33%. Moreover, the uptick of the observed p-curve at p-values of .04 and .05 might indicate data snooping (e.g., p-hacking, QRPs).
+
+```{r pcurve, echo = TRUE, fig.align = "center", dev = "pdf", out.width = "75%", fig.pos = "H", fig.cap = "P-curve estimation of average power of individual studies: .85, 90% CI [.70, .94]. The observed p-curve includes 21 statistically significant (p < .05) results of which 17 were inferior to .025. There were 14 additional results entered but excluded from p-curve because they were superior to .05."}
+source(here("code", "pcurve", "pcurve.R") )
+knitr::include_graphics(here("code", "pcurve", "p_curve.pdf") )
+```
+
+\newpage
+
+## Power analysis
+
+Below, we illustrate the sample size needed to reach a given level of statistical power according to the AC effects of interest.
+
+```{r power, echo = FALSE, dev = "pdf", results = "hide", fig.pos = "H", fig.width = 12, fig.height = 6, fig.cap = "Statistical power as a function of sample size, effect size, and research design (left panel: between-subject design; right panel: within-subject design), with a Type 1 error rate (alpha level) fixed at .05. The interval between the dashed lines indicates the 95% most credible effect sizes as estimated by our model. The black curve corresponds to the recommended power (0.9)."}
+library(hrbrthemes)
+library(ggpubr)
+library(pwr)
+
+# possibles sample sizes:
+Nrange <- seq(2, 400, 2)
+ESrange <- seq(0.01, 2, 0.01)
+grid <- expand.grid(N = Nrange, ES = ESrange, KEEP.OUT.ATTRS = FALSE)
+
+####################################
+# two samples t-test
+#############################
+
+power_between <- function(n, es) {
+    
+    res <- pwr.t.test(
+        n = n, d = es, sig.level = 0.05, power = NULL,
+        type = "two.sample", alternative = "two.sided"
+        )
+    
+    return(res$power)
+    
+}
+
+grid %<>%
+    # applying the power function each row
+    rowwise %>%
+    # creating a new column for power
+    mutate(power = power_between(N, ES) ) %>%
+    ungroup
+
+# identifying the sample size for a power of .90 for the average ES
+sample_size <- grid %>%
+    filter(ES == 0.5) %>%
+    filter(power >= .90) %>%
+    filter(N == min(N) ) %>%
+    pull(N)
+
+plotinter <-
+    grid %>%
+    ggplot(aes(x = ES, y = N) ) +
+    geom_raster(aes(fill = power), interpolate = TRUE) +
+    scale_fill_gradient(low = "grey10", high = "grey90") +
+    geom_line(
+        data = . %>% group_by(ES) %>% filter(power >= .90) %>% filter(N == min(N) * 2),
+        colour = "black", size = 1
+        ) +
+    geom_vline(xintercept = 0.16, lty = 2) +
+    geom_vline(xintercept = 0.46, lty = 2) +
+    # forcing the origin at zero
+    scale_x_continuous(expand = c(0, 0) ) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 300) ) +
+    xlab("Effect size") +
+    ylab("Sample size") +
+    ggtitle("Between-subject") +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 16, plot_title_size = 14, axis_text_size = 12
+        )
+
+############################################
+# one sample t-test
+################################
+
+power_within <- function(n, es) {
+    
+    res <- pwr.t.test(
+        n = n, d = es, sig.level = 0.05, power = NULL,
+        type = "one.sample", alternative = "two.sided"
+        )
+    
+    return(res$power)
+    
+}
+
+grid <- expand.grid(N = Nrange, ES = ESrange, KEEP.OUT.ATTRS = FALSE) %>%
+    # applying the power function each row
+    rowwise %>%
+    # creating a new column for power
+    mutate(power = power_within(N, ES) ) %>%
+    ungroup
+
+# identifying the sample size for a power of .90 for the average ES
+sample_size <- grid %>%
+    filter(ES == 0.5) %>%
+    filter(power >= .90) %>%
+    filter(N == min(N) ) %>%
+    pull(N)
+
+plotintra <-
+    grid %>%
+    ggplot(aes(x = ES, y = N) ) +
+    geom_raster(aes(fill = power), interpolate = TRUE, alpha = 0.99) +
+    scale_fill_gradient(low = "grey10", high = "grey90") +
+    geom_line(
+        data = . %>% group_by(ES) %>% filter(power >= .90) %>% filter(N == min(N) ),
+        colour = "black", size = 1
+    ) +
+    geom_vline(xintercept = 0.16, lty = 2) +
+    geom_vline(xintercept = 0.46, lty = 2) +
+    # forcing the origin at zero
+    scale_x_continuous(expand = c(0, 0) ) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 300) ) +
+    xlab("Effect size") +
+    ylab("Sample size") +
+    ggtitle("Within-subject") +
+    theme_ipsum(
+        base_family = "Helvetica",
+        base_size = 16, plot_title_size = 14, axis_text_size = 12, axis_title_size = 12
+        )
+
+ggarrange(
+    plotinter, plotintra, nrow = 1, ncol = 2, legend = "right",
+    common.legend = TRUE
+    )
+```
+
+\newpage
+
+# Session information
+
+```{r create_r-references, cache = FALSE}
+papaja::r_refs(file = "r-references.bib")
+```
+
+```{r, echo = TRUE, cache = FALSE}
+sessionInfo()
+```
+
+\newpage
+
+# References
+
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+\setlength{\parskip}{8pt}
+\noindent
