@@ -1,7 +1,9 @@
 # Action Effects on Visual Perception of Distances: A Multilevel Bayesian Meta-Analysis
 
 This repository contains the code for the paper by Molto, Nalborczyk, Morgado, & Palluel-Germain (2019).
+
 All material is also hosted on the following OSF repository: https://osf.io/bc3wn/
+
 An online version of the supplementary materials is available here: https://www.barelysignificant.com/meta/meta_sponge_bob
 
 ## Abstract
