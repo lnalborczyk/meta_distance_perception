@@ -1,8 +1,6 @@
 ---
 title: "Supplement to Action Effects on Visual Perception of Distances: A Multilevel Bayesian Meta-Analysis"
-
 shorttitle: "Supplementary Materials"
-
 author: 
   - name: "Lisa Molto"
     #affiliation: "1"
@@ -18,7 +16,6 @@ author:
   - name: "Nicolas Morgado"
     #affiliation : "3"
     email: "nicolasmorgado-univparisnanterre@outlook.fr"
-
 affiliation:
   - id            : "1"
     institution   : "Univ. Grenoble Alpes, CNRS, LPNC, 38000 Grenoble, France"
@@ -26,11 +23,9 @@ affiliation:
     institution   : "Department of Experimental Clinical and Health Psychology, Ghent University"
   - id            : "3"
     institution   : "Univ. Paris Nanterre, Centre de Recherche sur le Sport et le Mouvement, Nanterre, France"
-
 bibliography: r-references.bib
 figsintext: true
 class: doc
-
 output:
     html_document:
         toc: true
@@ -47,7 +42,6 @@ output:
         toc_depth: 3
         highlight: default
         number_sections: true
-
 header-includes:
    - \usepackage{graphicx,pdflscape}
    - \usepackage{geometry}
@@ -425,7 +419,7 @@ weight_effect <- hypothesis(bmod_manip, "(intercept + manipulationweight) = 0", 
 bmod_manip_est <- tidy(bmod_manip, parameters = c("^b_", "^sd_"), prob = 0.95)
 ```
 
-We then compute Bayes factors for each contrast using the `hypothesis()` method. This analysis reveals moderate evidence for an absence of difference between `Tool-use` and `Weight` ($\beta$ = `r hc3$hypothesis$Estimate`, 95% CrI [`r hc3$hypothesis[, 3]`, `r hc3$hypothesis[, 4]`, $BF_{01}$ = `r hc3$hypothesis$Evid.Ratio`), moderate evidence for an absence of difference between `Effort` and `Weight` ($\beta$ = `r hc2$hypothesis$Estimate`, 95% CrI [`r hc2$hypothesis[, 3]`, `r hc2$hypothesis[, 4]`, $BF_{01}$ = `r hc2$hypothesis$Evid.Ratio`), and moderate evidence for an absence of difference between `Effort` and `Tool-use` ($\beta$ = `r hc1$hypothesis$Estimate`, 95% CrI [`r hc1$hypothesis[, 3]`, `r hc1$hypothesis[, 4]`, $BF_{01}$ = `r hc1$hypothesis$Evid.Ratio`). We also test the null hypothesis for each constraint manipulation. This reveals moderate evidence for the hypothesis of no effect of weight manipulation ($\beta$ = `r weight_effect$hypothesis$Estimate`, 95% CrI [`r weight_effect$hypothesis$CI.Lower`, `r weight_effect$hypothesis$CI.Upper`], $BF_{01}$ = `r weight_effect$hypothesis$Evid.Ratio`). However, this analysis also reveals moderate to strong evidence for an effect of the AC manipulation (tool-use: $BF_{10}$ = `r 1 / tool.use_effect$hypothesis$Evid.Ratio` and effort: $BF_{10}$ = `r 1 / effort_effect$hypothesis$Evid.Ratio`).
+We then compute Bayes factors for each contrast using the `hypothesis()` method. This analysis reveals moderate evidence for an absence of difference between `Tool-use` and `Weight` ($\beta$ = `r hc3$hypothesis$Estimate`, 95% CrI [`r hc3$hypothesis$CI.Lower`, `r hc3$hypothesis$CI.Upper`, $BF_{01}$ = `r hc3$hypothesis$Evid.Ratio`), moderate evidence for an absence of difference between `Effort` and `Weight` ($\beta$ = `r hc2$hypothesis$Estimate`, 95% CrI [`r hc2$hypothesis$CI.Lower`, `r hc2$hypothesis$CI.Upper`, $BF_{01}$ = `r hc2$hypothesis$Evid.Ratio`), and moderate evidence for an absence of difference between `Effort` and `Tool-use` ($\beta$ = `r hc1$hypothesis$Estimate`, 95% CrI [`r hc1$hypothesis$CI.Lower`, `r hc1$hypothesis$CI.Upper`, $BF_{01}$ = `r hc1$hypothesis$Evid.Ratio`). We also test the null hypothesis for each constraint manipulation. This reveals moderate evidence for the hypothesis of no effect of weight manipulation ($\beta$ = `r weight_effect$hypothesis$Estimate`, 95% CrI [`r weight_effect$hypothesis$CI.Lower`, `r weight_effect$hypothesis$CI.Upper`], $BF_{01}$ = `r weight_effect$hypothesis$Evid.Ratio`). However, this analysis also reveals moderate to strong evidence for an effect of the AC manipulation (tool-use: $BF_{10}$ = `r 1 / tool.use_effect$hypothesis$Evid.Ratio` and effort: $BF_{10}$ = `r 1 / effort_effect$hypothesis$Evid.Ratio`).
 
 ```{r, fig.pos = "H", dev = "pdf", out.width = "75%", fig.align = "center", fig.cap = "Posterior distribution of effect size by constraint manipulation."}
 # retrieving the posterior samples
@@ -577,7 +571,7 @@ c3 <- post[, 1] - (post[, 1] + post[, 3])
 
 We can plot the posterior distribution corresponding to each *contrast*, using the `BEST` package [@R-BEST]. Below, we plot the contrast `c1`, which represents the comparison of the `verbal` and `vm` conditions.
 
-```{r, echo = TRUE, dev = "pdf", out.width = "50%", results = "hide", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the difference between verbal and vm."}
+```{r, echo = TRUE, dev = "pdf", out.width = "75%", results = "hide", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the difference between verbal and vm."}
 library(BEST)
 par(cex = 0.75, cex.lab = 0.75)
 plotPost(c1, credMass = 0.95, compVal = 0, col = "#b3cde0")
@@ -594,7 +588,7 @@ hypothesis(
 
 We can then follow the same strategy for the two other contrasts, `c2` and `c3`, by plotting the posterior distribution of the difference between the two conditions.
 
-```{r, echo = TRUE, results = "hide", dev = "pdf", out.width = "50%", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the contrast."}
+```{r, echo = TRUE, results = "hide", dev = "pdf", out.width = "75%", fig.align = "center", fig.pos = "H", fig.cap = "Posterior distribution of the contrast."}
 par(cex = 0.75, cex.lab = 0.75)
 plotPost(c2, credMass = 0.95, compVal = 0, col = "#b3cde0")
 plotPost(c3, credMass = 0.95, compVal = 0, col = "#b3cde0")
@@ -861,7 +855,7 @@ viz_funnel(
 
 P-curve analyses test whether a set of p-values supports the existence of an effect. If there is no effect, p-values should be uniformly distributed, whereas if there is an effect, p-values distribution should be right-skewed, with more p-values close to .01 than .05. The observed distribution of p-values from our database is close to a distribution that would be expected with a *true* non-null effect, although it does not differ significantly from the distribution of p-values we would expect for a small effect size and a power of 33%. Moreover, the uptick of the observed p-curve at p-values of .04 and .05 might indicate data snooping (e.g., p-hacking, QRPs).
 
-```{r pcurve, echo = TRUE, fig.align = "center", dev = "pdf", out.width = "75%", fig.pos = "H", fig.cap = "P-curve estimation of average power of individual studies: .85, 90% CI [.70, .94]. The observed p-curve includes 21 statistically significant (p < .05) results of which 17 were inferior to .025. There were 14 additional results entered but excluded from p-curve because they were superior to .05."}
+```{r pcurve, echo = TRUE, fig.align = "center", dev = "pdf", out.width = "75%", fig.pos = "H", fig.cap = "P-curve estimation of average power of individual studies: .85, 90\\% CI [.70, .94]. The observed p-curve includes 21 statistically significant (p < .05) results of which 17 were inferior to .025. There were 14 additional results entered but excluded from p-curve because they were superior to .05."}
 source(here("code", "pcurve", "pcurve.R") )
 knitr::include_graphics(here("code", "pcurve", "p_curve.pdf") )
 ```

@@ -474,7 +474,7 @@ Below we retrieve samples from the posterior distribution using the \texttt{post
 \end{Highlighting}
 \end{Shaded}
 
-We then compute Bayes factors for each contrast using the \texttt{hypothesis()} method. This analysis reveals moderate evidence for an absence of difference between \texttt{Tool-use} and \texttt{Weight} (\(\beta\) = 0.27, 95\% CrI {[}0.25, -0.23, \(BF_{01}\) = 3.10), moderate evidence for an absence of difference between \texttt{Effort} and \texttt{Weight} (\(\beta\) = 0.19, 95\% CrI {[}0.23, -0.26, \(BF_{01}\) = 3.16), and moderate evidence for an absence of difference between \texttt{Effort} and \texttt{Tool-use} (\(\beta\) = -0.07, 95\% CrI {[}0.18, -0.43, \(BF_{01}\) = 5.24). We also test the null hypothesis for each constraint manipulation. This reveals moderate evidence for the hypothesis of no effect of weight manipulation (\(\beta\) = 0.13, 95\% CrI {[}-0.26, 0.55{]}, \(BF_{01}\) = 6.16). However, this analysis also reveals moderate to strong evidence for an effect of the AC manipulation (tool-use: \(BF_{10}\) = 3.81 and effort: \(BF_{10}\) = 10.45).
+We then compute Bayes factors for each contrast using the \texttt{hypothesis()} method. This analysis reveals moderate evidence for an absence of difference between \texttt{Tool-use} and \texttt{Weight} (\(\beta\) = 0.27, 95\% CrI {[}-0.23, 0.77, \(BF_{01}\) = 3.10), moderate evidence for an absence of difference between \texttt{Effort} and \texttt{Weight} (\(\beta\) = 0.19, 95\% CrI {[}-0.26, 0.65, \(BF_{01}\) = 3.16), and moderate evidence for an absence of difference between \texttt{Effort} and \texttt{Tool-use} (\(\beta\) = -0.07, 95\% CrI {[}-0.43, 0.30, \(BF_{01}\) = 5.24). We also test the null hypothesis for each constraint manipulation. This reveals moderate evidence for the hypothesis of no effect of weight manipulation (\(\beta\) = 0.13, 95\% CrI {[}-0.26, 0.55{]}, \(BF_{01}\) = 6.16). However, this analysis also reveals moderate to strong evidence for an effect of the AC manipulation (tool-use: \(BF_{10}\) = 3.81 and effort: \(BF_{10}\) = 10.45).
 
 \begin{figure}[H]
 
@@ -922,10 +922,13 @@ P-curve analyses test whether a set of p-values supports the existence of an eff
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
-\centering
-\includegraphics{/Users/Ladislas/Desktop/Academia/projects/submitted/meta_distance_perception/code/pcurve/p_curve.pdf}
-\caption{\label{fig:pcurve}P-curve estimation of average power of individual studies: .85, 90\% CI {[}.70, .94{]}. The observed p-curve includes 21 statistically significant (p \textless{} .05) results of which 17 were inferior to .025. There were 14 additional results entered but excluded from p-curve because they were superior to .05.}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.75\linewidth]{/Users/Ladislas/Desktop/Academia/projects/submitted/meta_distance_perception/code/pcurve/p_curve} 
+
+}
+
+\caption{P-curve estimation of average power of individual studies: .85, 90\% CI [.70, .94]. The observed p-curve includes 21 statistically significant (p < .05) results of which 17 were inferior to .025. There were 14 additional results entered but excluded from p-curve because they were superior to .05.}\label{fig:pcurve}
 \end{figure}
 
 \newpage
@@ -968,26 +971,23 @@ Below, we illustrate the sample size needed to reach a given level of statistica
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] pwr_1.2-2            ggpubr_0.2           poibin_1.3          
-##  [4] metafor_2.0-0        Matrix_1.2-17        metaviz_0.3.0       
-##  [7] BEST_0.5.1           HDInterval_0.2.0     brmstools_0.5.1     
-## [10] broom_0.5.2          brms_2.8.0           Rcpp_1.0.1          
-## [13] here_0.1             knitr_1.22           readxl_1.3.1        
-## [16] papaja_0.1.0.9709    magrittr_1.5         forcats_0.4.0       
-## [19] stringr_1.4.0        dplyr_0.8.1          purrr_0.3.2         
-## [22] readr_1.3.1          tidyr_0.8.3          tibble_2.1.1        
-## [25] ggplot2_3.1.1        tidyverse_1.2.1      patchwork_0.0.1     
-## [28] hrbrthemes_0.6.0     bridgesampling_0.6-0
+##  [1] brms_2.8.0           Rcpp_1.0.1           here_0.1            
+##  [4] knitr_1.22           readxl_1.3.1         papaja_0.1.0.9709   
+##  [7] magrittr_1.5         forcats_0.4.0        stringr_1.4.0       
+## [10] dplyr_0.8.1          purrr_0.3.2          readr_1.3.1         
+## [13] tidyr_0.8.3          tibble_2.1.1         ggplot2_3.1.1       
+## [16] tidyverse_1.2.1      patchwork_0.0.1      hrbrthemes_0.6.0    
+## [19] bridgesampling_0.6-0
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] colorspace_1.4-1   ggridges_0.5.1     rsconnect_0.8.13  
 ##  [4] rprojroot_1.3-2    markdown_0.9       base64enc_0.1-3   
 ##  [7] rstudioapi_0.10    rstan_2.18.2       DT_0.5            
 ## [10] mvtnorm_1.0-10     lubridate_1.7.4    xml2_1.2.0        
-## [13] codetools_0.2-16   extrafont_0.17     shinythemes_1.1.2 
-## [16] bayesplot_1.6.0    jsonlite_1.6       Rttf2pt1_1.3.7    
-## [19] rjags_4-8          shiny_1.3.1        compiler_3.5.3    
-## [22] httr_1.4.0         backports_1.1.4    assertthat_0.2.1  
+## [13] extrafont_0.17     shinythemes_1.1.2  bayesplot_1.6.0   
+## [16] jsonlite_1.6       broom_0.5.2        Rttf2pt1_1.3.7    
+## [19] shiny_1.3.1        compiler_3.5.3     httr_1.4.0        
+## [22] backports_1.1.4    assertthat_0.2.1   Matrix_1.2-17     
 ## [25] lazyeval_0.2.2     cli_1.1.0          later_0.8.0       
 ## [28] htmltools_0.3.6    prettyunits_1.0.2  tools_3.5.3       
 ## [31] igraph_1.2.4       coda_0.19-2        gtable_0.3.0      
@@ -1000,18 +1000,17 @@ Below, we illustrate the sample size needed to reach a given level of statistica
 ## [52] parallel_3.5.3     inline_0.3.15      shinystan_2.5.0   
 ## [55] yaml_2.2.0         gridExtra_2.3      gdtools_0.1.8     
 ## [58] loo_2.1.0.9000     StanHeaders_2.18.1 stringi_1.4.3     
-## [61] highr_0.8          dygraphs_1.1.1.6   pkgbuild_1.0.3    
-## [64] rlang_0.3.4        pkgconfig_2.0.2    matrixStats_0.54.0
-## [67] evaluate_0.13      lattice_0.20-38    labeling_0.3      
-## [70] rstantools_1.5.1   htmlwidgets_1.3    cowplot_0.9.4     
-## [73] tidyselect_0.2.5   processx_3.3.0     plyr_1.8.4        
-## [76] bookdown_0.9.17    R6_2.4.0           generics_0.0.2    
-## [79] pillar_1.4.0       haven_2.1.0        withr_2.1.2       
-## [82] xts_0.11-2         abind_1.4-5        modelr_0.1.4      
-## [85] crayon_1.3.4       rmarkdown_1.12     grid_3.5.3        
-## [88] callr_3.2.0        threejs_0.3.1      digest_0.6.18     
-## [91] xtable_1.8-3       httpuv_1.5.1       stats4_3.5.3      
-## [94] munsell_0.5.0      shinyjs_1.0
+## [61] dygraphs_1.1.1.6   pkgbuild_1.0.3     rlang_0.3.4       
+## [64] pkgconfig_2.0.2    matrixStats_0.54.0 evaluate_0.13     
+## [67] lattice_0.20-38    rstantools_1.5.1   htmlwidgets_1.3   
+## [70] tidyselect_0.2.5   processx_3.3.0     plyr_1.8.4        
+## [73] bookdown_0.9.17    R6_2.4.0           generics_0.0.2    
+## [76] pillar_1.4.0       haven_2.1.0        withr_2.1.2       
+## [79] xts_0.11-2         abind_1.4-5        modelr_0.1.4      
+## [82] crayon_1.3.4       rmarkdown_1.12     grid_3.5.3        
+## [85] callr_3.2.0        threejs_0.3.1      digest_0.6.18     
+## [88] xtable_1.8-3       httpuv_1.5.1       stats4_3.5.3      
+## [91] munsell_0.5.0      shinyjs_1.0
 \end{verbatim}
 
 \newpage
