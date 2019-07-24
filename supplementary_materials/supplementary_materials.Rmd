@@ -3,17 +3,17 @@ title: "Supplement to Action Effects on Visual Perception of Distances: A Multil
 shorttitle: "Supplementary Materials"
 author: 
   - name: "Lisa Molto"
-    affiliation: "1"
+    #affiliation: "1"
     address: "Laboratoire de Psychologie et Neurocognition, Univ. Grenoble Alpes, 1251 avenue centrale, 38058 Grenoble Cedex 9, France"
     email: "lisa.molto@univ-grenoble-alpes.fr"
   - name: "Ladislas Nalborczyk"
-    affiliation : "1,2"
+    #affiliation : "1,2"
     email: "ladislas.nalborczyk@gmail.com"
   - name: "Richard Palluel-Germain"
-    affiliation : "1"
+    #affiliation : "1"
     email: "richard.palluel-germain@univ-grenoble-alpes.fr"
   - name: "Nicolas Morgado"
-    affiliation : "3"
+    #affiliation : "3"
     corresponding: yes
     address: "Centre de Recherche sur le Sport et le Mouvement (CeRSM). UFR Sciences et Techniques des Activités Physiques et Sportives (STAPS). 200 av. de la République - 92001 Nanterre Cedex"
     email: "nicolasmorgado-univparisnanterre@outlook.fr"
@@ -28,11 +28,6 @@ bibliography: r-references.bib
 figsintext: true
 class: doc
 output:
-    papaja::apa6_pdf:
-        toc: true
-        toc_depth: 3
-        highlight: default
-        number_sections: true
     html_document:
         toc: true
         toc_float: true
@@ -43,6 +38,11 @@ output:
         theme: cosmo # sandstone
         highlight: kate
         code_folding: hide
+    papaja::apa6_pdf:
+        toc: true
+        toc_depth: 3
+        highlight: default
+        number_sections: true
 header-includes:
    - \usepackage{graphicx,pdflscape}
    - \usepackage{geometry}
@@ -1005,6 +1005,61 @@ ggarrange(
     plotinter, plotintra, nrow = 1, ncol = 2, legend = "right",
     common.legend = TRUE
     )
+```
+
+## Effect size interpretations
+
+We propose to consider the mode of the posterior distribution on the intercept (i.e., the estimate of the overall effect) as a medium effect size in the action constraint field as a convention. By extension, we propose conventions defining ranges for extremely small, very small, small, medium, large, very large and extremey large effects for this field based on the properties of the posterior distribution of effect sizes.
+
+```{r effsize, echo = FALSE, dev = "pdf", results = "hide", fig.align = "center", fig.width = 7, fig.height = 7, out.width = "66%", fig.cap = "Posterior distribution of the overall effect size with our proposed convention to interpret the effect sizes."}
+# retrieving posterior samples
+post <- posterior_samples(bmod1)
+intercept <- post$b_intercept
+
+# plotting posterior distribution
+plotPost(
+    intercept, showCurve = TRUE, showMode = TRUE,
+    credMass = NULL, xlab = "", xlim = c(0, 0.6),
+    col = "gray60", cex = 1
+    )
+
+# add label for x-axis
+title(xlab = "Effect size (Hedge's g)")
+
+# computing 50% HDI
+hdi_50 <- hdi(intercept, credMass = 0.5) %>% as.numeric
+
+# computing 80% HDI
+hdi_80 <- hdi(intercept, credMass = 0.8) %>% as.numeric
+
+# computing 95% HDI
+hdi_95 <- hdi(intercept, credMass = 0.95) %>% as.numeric
+
+# plotting the HDIs bounds
+clip(0, 1, 0, 5)
+abline(v = hdi_50[1], lty = 5)
+abline(v = hdi_50[2], lty = 5)
+abline(v = hdi_80[1], lty = 5)
+abline(v = hdi_80[2], lty = 5)
+abline(v = hdi_95[1], lty = 5)
+abline(v = hdi_95[2], lty = 5)
+
+# suggested conventions
+height_text <- 3
+arrows(hdi_50[1], 2.5, hdi_50[2], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(hdi_50), y = height_text, labels = "medium", cex = 0.8)
+arrows(hdi_80[1], 2.5, hdi_50[1], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(hdi_80[1], hdi_50[1])), y = height_text, labels = "small", cex = 0.8)
+arrows(hdi_95[1], 2.5, hdi_80[1], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(hdi_95[1], hdi_80[1])), y = height_text, labels = "very\n small", cex = 0.8)
+arrows(0, 2.5, hdi_95[1], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(0, hdi_95[1])), y = height_text, labels = "extremely\n small", cex = 0.8)
+arrows(hdi_50[2], 2.5, hdi_80[2], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(hdi_50[2], hdi_80[2])), y = height_text, labels = "large", cex = 0.8)
+arrows(hdi_80[2], 2.5, hdi_95[2], 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(hdi_80[2], hdi_95[2])), y = height_text, labels = "very\n large", cex = 0.8)
+arrows(hdi_95[2], 2.5, 0.6, 2.5, code = 3, lwd = 2, length = 0.1)
+text(x = mean(c(hdi_95[2], 0.6)), y = height_text, labels = "extremely\n large", cex = 0.8)
 ```
 
 \newpage
