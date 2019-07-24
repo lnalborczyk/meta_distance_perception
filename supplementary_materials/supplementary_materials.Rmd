@@ -3,18 +3,19 @@ title: "Supplement to Action Effects on Visual Perception of Distances: A Multil
 shorttitle: "Supplementary Materials"
 author: 
   - name: "Lisa Molto"
-    #affiliation: "1"
-    corresponding: yes
+    affiliation: "1"
     address: "Laboratoire de Psychologie et Neurocognition, Univ. Grenoble Alpes, 1251 avenue centrale, 38058 Grenoble Cedex 9, France"
     email: "lisa.molto@univ-grenoble-alpes.fr"
   - name: "Ladislas Nalborczyk"
-    #affiliation : "1,2"
+    affiliation : "1,2"
     email: "ladislas.nalborczyk@gmail.com"
   - name: "Richard Palluel-Germain"
-    #affiliation : "1"
+    affiliation : "1"
     email: "richard.palluel-germain@univ-grenoble-alpes.fr"
   - name: "Nicolas Morgado"
-    #affiliation : "3"
+    affiliation : "3"
+    corresponding: yes
+    address: "Centre de Recherche sur le Sport et le Mouvement (CeRSM). UFR Sciences et Techniques des Activités Physiques et Sportives (STAPS). 200 av. de la République - 92001 Nanterre Cedex"
     email: "nicolasmorgado-univparisnanterre@outlook.fr"
 affiliation:
   - id            : "1"
@@ -27,6 +28,11 @@ bibliography: r-references.bib
 figsintext: true
 class: doc
 output:
+    papaja::apa6_pdf:
+        toc: true
+        toc_depth: 3
+        highlight: default
+        number_sections: true
     html_document:
         toc: true
         toc_float: true
@@ -37,15 +43,32 @@ output:
         theme: cosmo # sandstone
         highlight: kate
         code_folding: hide
-    papaja::apa6_pdf:
-        toc: true
-        toc_depth: 3
-        highlight: default
-        number_sections: true
 header-includes:
    - \usepackage{graphicx,pdflscape}
    - \usepackage{geometry}
    - \usepackage{float}
+references:
+- id: peters2008
+  title: "Contour-enhanced meta-analysis funnel plots help distinguish publication bias from other causes of asymmetry"
+  author:
+  - family: Peters
+    given: Jaime L.
+  - family: Sutton
+    given: Alex J.
+  - family: Jones
+    given: David R.
+  - family: Abrams
+    given: Keith R.
+  - family: Rushton
+    given: Lesley
+  type: article-journal
+  container-title: Journal of Clinical Epidemiology
+  volume: 61
+  date: 10
+  page: 991-996
+  DOI: 10.1016/j.jclinepi.2007.11.010
+  issued:
+    year: 2008
 ---
 
 \newpage
@@ -835,9 +858,9 @@ viz_funnel2(
         )
 ```
 
-Below, we make a contour-enhanced funnel plot, allowing to distinguish patterns of significance in published studies.
+Below, we make a contour-enhanced funnel plot, allowing to distinguish patterns of significance in published studies [@peters2008], using the `metaviz` package [@R-metaviz].
 
-```{r funnel2, echo = TRUE, dev = "pdf", out.width = "75%", fig.align = "center", fig.pos = "H", fig.cap = "Contour-enhanced funnel plot with effect sizes on x-axis and standard errors on the y-axis. Ranges of p-values from the experiments are indicated by the shaded regions. White region inside the funnel corresponds to p-values greater than .10, the gray-shaded region corresponds to p-values between .05 and .01, and the region outside of the funnel corresponds to p-values below .01."}
+```{r funnel2, echo = TRUE, dev = "pdf", out.width = "75%", fig.align = "center", fig.pos = "H", fig.cap = "Contour-enhanced funnel plot with effect sizes on x-axis and standard errors on the y-axis. Ranges of p-values from the experiments are indicated by the shaded regions. White region inside the funnel corresponds to p-values greater than .05, the gray-shaded region corresponds to p-values between .05 and .01, and the white region outside of the funnel corresponds to p-values below .01."}
 viz_funnel(
     x = res, method = "REML",
     contours = FALSE, sig_contours = TRUE, detail_level = 1,

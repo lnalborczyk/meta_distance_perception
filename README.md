@@ -1,6 +1,6 @@
 # Action Effects on Visual Perception of Distances: A Multilevel Bayesian Meta-Analysis
 
-This repository contains the code for the paper by Molto, Nalborczyk, Morgado, & Palluel-Germain (2019).
+This repository contains the code for the paper by Molto, Nalborczyk, Palluel-Germain, & Morgado (2019).
 
 All material is also hosted on the following OSF repository: https://osf.io/bc3wn/
 
@@ -8,4 +8,4 @@ An online version of the supplementary materials is available here: https://www.
 
 ## Abstract
 
-Some studies suggested that action constraints influence visual perception of distances. For instance, the greater the effort to cover a distance, the longer people perceive this distance. Some authors questioned whether action constraint effects exist and, if so, whether they reflect genuine perceptual effects or demand characteristics. We conducted a multilevel Bayesian meta-analysis (k = 37, N = 1035) which showed a medium overall action constraint effect on distance estimation (Hedge’s g = 0.29, 95% CrI [0.16, 0.47]). However, wearing a heavy object or not, which is the most controversial constraint manipulation, might not affect distance estimation. Contrary to predictions from the demand characteristic account, we observed anecdotal to moderate evidence against the moderating effect of research design (i.e., between- vs. within-subject designs) and measure (i.e., verbal, visual, and action-based measures).  Overall, our results suggest that action constraints influence distance estimation and that demand characteristics cannot fully explain this influence.
+Some studies suggested that action constraints influence visual perception of distances. For instance, the greater the effort to cover a distance, the longer people perceive this distance. The present multi-level Bayesian meta-analysis supports the existence of a small action constraint effect on distance estimation (Nstudies = 37, Nparticipants = 1035). Moreover, this effect slightly varied according to the action constraint category (i.e., effort, weight, tool-use) but not according to the motor intention of the participants. Some authors argued that action constraint effects reflect an experimental demand bias rather than a genuine perceptual effect. Even if our meta-analysis did not allow to dismiss this possibility, it did not support it. To improve this meta-analysis, we encourage researchers to contribute to this meta-analysis by using our online repository to send us their published or unpublished data.
