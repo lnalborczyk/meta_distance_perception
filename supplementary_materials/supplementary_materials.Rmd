@@ -3,17 +3,17 @@ title: "Supplement to Action Effects on Visual Perception of Distances: A Multil
 shorttitle: "Supplementary Materials"
 author: 
   - name: "Lisa Molto"
-    #affiliation: "1"
+    affiliation: "1"
     address: "Laboratoire de Psychologie et Neurocognition, Univ. Grenoble Alpes, 1251 avenue centrale, 38058 Grenoble Cedex 9, France"
     email: "lisa.molto@univ-grenoble-alpes.fr"
   - name: "Ladislas Nalborczyk"
-    #affiliation : "1,2"
+    affiliation : "1,2"
     email: "ladislas.nalborczyk@gmail.com"
   - name: "Richard Palluel-Germain"
-    #affiliation : "1"
+    affiliation : "1"
     email: "richard.palluel-germain@univ-grenoble-alpes.fr"
   - name: "Nicolas Morgado"
-    #affiliation : "3"
+    affiliation : "3"
     corresponding: yes
     address: "Centre de Recherche sur le Sport et le Mouvement (CeRSM). UFR Sciences et Techniques des Activités Physiques et Sportives (STAPS). 200 av. de la République - 92001 Nanterre Cedex"
     email: "nicolasmorgado-univparisnanterre@outlook.fr"
@@ -28,6 +28,11 @@ bibliography: r-references.bib
 figsintext: true
 class: doc
 output:
+    papaja::apa6_pdf:
+        toc: true
+        toc_depth: 3
+        highlight: default
+        number_sections: true
     html_document:
         toc: true
         toc_float: true
@@ -38,11 +43,6 @@ output:
         theme: cosmo # sandstone
         highlight: kate
         code_folding: hide
-    papaja::apa6_pdf:
-        toc: true
-        toc_depth: 3
-        highlight: default
-        number_sections: true
 header-includes:
    - \usepackage{graphicx,pdflscape}
    - \usepackage{geometry}
@@ -1020,7 +1020,7 @@ intercept <- post$b_intercept
 plotPost(
     intercept, showCurve = TRUE, showMode = TRUE,
     credMass = NULL, xlab = "", xlim = c(0, 0.6),
-    col = "gray60", cex = 1
+    col = "gray70", cex = 1
     )
 
 # add label for x-axis
@@ -1060,6 +1060,14 @@ arrows(hdi_80[2], 2.5, hdi_95[2], 2.5, code = 3, lwd = 2, length = 0.1)
 text(x = mean(c(hdi_80[2], hdi_95[2])), y = height_text, labels = "very\n large", cex = 0.8)
 arrows(hdi_95[2], 2.5, 0.6, 2.5, code = 3, lwd = 2, length = 0.1)
 text(x = mean(c(hdi_95[2], 0.6)), y = height_text, labels = "extremely\n large", cex = 0.8)
+
+# plotting numerical values of the bounds
+text(x = hdi_95[1], y = 5, label = round(hdi_95[1], 2), cex = 0.8, xpd = NA)
+text(x = hdi_80[1], y = 5, label = round(hdi_80[1], 2), cex = 0.8, xpd = NA)
+text(x = hdi_50[1], y = 5, label = round(hdi_50[1], 2), cex = 0.8, xpd = NA)
+text(x = hdi_50[2], y = 5, label = round(hdi_50[2], 2), cex = 0.8, xpd = NA)
+text(x = hdi_80[2], y = 5, label = round(hdi_80[2], 2), cex = 0.8, xpd = NA)
+text(x = hdi_95[2], y = 5, label = round(hdi_95[2], 2), cex = 0.8, xpd = NA)
 ```
 
 \newpage
