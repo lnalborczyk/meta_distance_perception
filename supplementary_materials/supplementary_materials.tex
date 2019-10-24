@@ -188,8 +188,16 @@
 
 \newpage
 
+\hypertarget{overall-effect-size-estimation}{%
+\section{Overall effect size estimation}\label{overall-effect-size-estimation}}
+
+\hypertarget{studies-characteristics}{%
+\subsection{Studies characteristics}\label{studies-characteristics}}
+
+As Kirsch and Kunde (\protect\hyperlink{ref-kirsch_visual_2013}{2013}) used multiple effort manipulations in each of their studies, we aggregated their outcomes in order to obtain a single outcome per study. Thus, the resulting full dataset comprised 45 outcomes extracted from 37 studies from 20 articles (Nparticipants = 1035, Nobservations = 1299). In six other studies, the authors used several measures of distance perception, resulting in an effect size estimation (i.e., outcome) per measure (Hutchison \& Loomis, \protect\hyperlink{ref-hutchison_does_2006}{2006}; Meagher \& Marsh, \protect\hyperlink{ref-meagher_costs_2014}{2014}; Woods, Philbeck, \& Danoff, \protect\hyperlink{ref-woods_various_2009}{2009}). Such multiple-outcome studies weight more in a meta-analysis than single-outcome studies. To avoid this, we rearranged our full dataset by averaging all the outcomes from the same study to include only one outcome per study in our meta-analysis. We used this resulting single-outcome-study dataset (37 outcomes) to estimate the overall effect, the moderator effect of constraint category, and the moderator effect of the research design. It was impossible to estimate the moderator effects of the motor intention and measure after averaging the several outcomes from the same study. Thus, we used our full dataset for these analyses.
+
 \hypertarget{the-meta-analytic-model}{%
-\section{The meta-analytic model}\label{the-meta-analytic-model}}
+\subsection{The meta-analytic model}\label{the-meta-analytic-model}}
 
 Let \(y_{ij}\) be the effect size of the \(i\)th study in the \(j\)th article. Then, the 3-levels meta-analytic model can be written as:
 
@@ -220,7 +228,7 @@ y_{ij} &\sim \mathrm{Normal}(\mu_{ij}, \sigma_{ij}) \\
 \end{aligned}
 \]
 
-This model can easily be fitted using the \texttt{brms} package (Bürkner, 2017), with an lme4-like syntax.
+This model can easily be fitted using the \texttt{brms} package (Bürkner, \protect\hyperlink{ref-R-brms}{2017}), with an lme4-like syntax.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -254,7 +262,7 @@ This model can easily be fitted using the \texttt{brms} package (Bürkner, 2017)
 \hypertarget{retrieving-the-estimates}{%
 \subsection{Retrieving the estimates}\label{retrieving-the-estimates}}
 
-We then extract the posterior mean and 95\% credible intervals of the previous model using the \texttt{tidy()} function of the \texttt{broom} package (Robinson, 2017).
+We then extract the posterior mean and 95\% credible intervals of the previous model using the \texttt{tidy()} function of the \texttt{broom} package (Robinson, \protect\hyperlink{ref-R-broom}{2017}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -346,7 +354,7 @@ We can interpret the intercept estimate by saying that the most credible value o
 \hypertarget{hypothesis-testing}{%
 \subsection{Hypothesis testing}\label{hypothesis-testing}}
 
-We can test the hypothesis that the intercept is equal to 0 by comparing a model with the intercept and a model without the intercept (i.e., with the intercept value fixed to 0). We compare these models using the \texttt{bayes\_factor()} method (that uses the \texttt{bridgesampling} package, Gronau \& Singmann, 2017).
+We can test the hypothesis that the intercept is equal to 0 by comparing a model with the intercept and a model without the intercept (i.e., with the intercept value fixed to 0). We compare these models using the \texttt{bayes\_factor()} method (that uses the \texttt{bridgesampling} package, Gronau \& Singmann, \protect\hyperlink{ref-R-bridgesampling}{2017}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -372,7 +380,7 @@ We can test the hypothesis that the intercept is equal to 0 by comparing a model
 \end{Highlighting}
 \end{Shaded}
 
-The Bayes Factor is given by \texttt{bf\_intercept\$bf\_median\_based} (median estimate based on 100 simulations) and is approximately equal to \(BF_{10} = \dfrac{1}{BF_{01}}\) = 281.14.
+The Bayes factor is given by \texttt{bf\_intercept\$bf\_median\_based} (median estimate based on 100 simulations) and is approximately equal to \(BF_{10} = \dfrac{1}{BF_{01}}\) = 281.14.
 
 \hypertarget{forest-plot-of-the-main-model}{%
 \subsection{Forest plot of the main model}\label{forest-plot-of-the-main-model}}
@@ -432,6 +440,8 @@ The next figure depicts the estimates of the above model, where densities repres
 \subsection{Estimation by constraint manipulation}\label{estimation-by-constraint-manipulation}}
 
 We previously provided an estimate of the global effect size of action constraint on distance perception. Below, we estimate the effect size based on the action constraint manipulation by including \texttt{manipulation} as a categorical predictor in the model. We have three categories of manipulation that are: tool-use, weight, and effort. In this model the intercept represents the average effect size corresponding to the \texttt{Effort} manipulation, and the \(\beta\)s for \texttt{Tool-use} and \texttt{Weight} represent deviations from this condition.
+
+As different action constraints (e.g., backpack, tool-use) might influence distance perception through different mechanisms, we also computed the effect sizes for each constraint manipulation. We discarded Linkenauger, Bülthoff, and Mohler (\protect\hyperlink{ref-linkenauger_virtual_2015}{2015})'s article (i.e., four studies) from this analysis as their manipulation did not fit in any constraint category.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -622,7 +632,7 @@ Then, we can use these posterior samples to compare the conditions with each oth
 \end{Highlighting}
 \end{Shaded}
 
-We can plot the posterior distribution corresponding to each \emph{contrast}, using the \texttt{BEST} package (Kruschke \& Meredith, 2017). Below, we plot the contrast \texttt{c1}, which represents the comparison of the \texttt{verbal} and \texttt{vm} conditions.
+We can plot the posterior distribution corresponding to each \emph{contrast}, using the \texttt{BEST} package (Kruschke \& Meredith, \protect\hyperlink{ref-R-BEST}{2017}). Below, we plot the contrast \texttt{c1}, which represents the comparison of the \texttt{verbal} and \texttt{vm} conditions.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -641,7 +651,7 @@ We can plot the posterior distribution corresponding to each \emph{contrast}, us
 \caption{Posterior distribution of the difference between verbal and vm.}\label{fig:unnamed-chunk-23}
 \end{figure}
 
-We can then compute the Bayes Factor for this difference using the \texttt{hypothesis()} function.
+We can then compute the Bayes factor for this difference using the \texttt{hypothesis()} function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -696,7 +706,7 @@ We can then follow the same strategy for the two other contrasts, \texttt{c2} an
 \caption{Posterior distribution of the contrast.}\label{fig:unnamed-chunk-252}
 \end{figure}
 
-We then compute the Bayes Factor for these differences using the \texttt{hypothesis()} function, as previously.
+We then compute the Bayes factor for these differences using the \texttt{hypothesis()} function, as previously.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -824,7 +834,7 @@ Estimations of this model can be retrieved using the \texttt{tidy()} function.
 ## 4   sd_study__Intercept 0.11866278 0.06073119  0.01946639 0.2573810
 \end{verbatim}
 
-We can test whether the difference between the two conditions is equal to zero by computing a Bayes Factor using the \texttt{bayes\_factor()} method.
+We can test whether the difference between the two conditions is equal to zero by computing a Bayes factor using the \texttt{bayes\_factor()} method.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -883,7 +893,7 @@ If there is no publication bias, the funnel plot should look symmetric with outc
 \caption{Funnel plot with effect sizes on x-axis and standard errors on the y-axis.}\label{fig:funnel1}
 \end{figure}
 
-Below, we make a contour-enhanced funnel plot, allowing to distinguish patterns of significance in published studies (Peters, Sutton, Jones, Abrams, \& Rushton, 2008), using the \texttt{metaviz} package (Kossmeier, Tran, \& Voracek, 2018).
+Below, we make a contour-enhanced funnel plot, allowing to distinguish patterns of significance in published studies (Peters, Sutton, Jones, Abrams, \& Rushton, \protect\hyperlink{ref-peters2008}{2008}), using the \texttt{metaviz} package (Kossmeier, Tran, \& Voracek, \protect\hyperlink{ref-R-metaviz}{2018}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -985,50 +995,47 @@ We propose to consider the mode of the posterior distribution on the intercept (
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] pwr_1.2-2            ggpubr_0.2           poibin_1.3          
-##  [4] metafor_2.0-0        Matrix_1.2-17        metaviz_0.3.0       
-##  [7] BEST_0.5.1           HDInterval_0.2.0     brmstools_0.5.1     
-## [10] broom_0.5.2          brms_2.8.0           Rcpp_1.0.1          
-## [13] here_0.1             knitr_1.22           readxl_1.3.1        
-## [16] papaja_0.1.0.9709    magrittr_1.5         forcats_0.4.0       
-## [19] stringr_1.4.0        dplyr_0.8.3          purrr_0.3.2         
-## [22] readr_1.3.1          tidyr_0.8.3          tibble_2.1.1        
-## [25] ggplot2_3.2.0        tidyverse_1.2.1      patchwork_0.0.1     
-## [28] hrbrthemes_0.6.0     bridgesampling_0.6-0
+##  [1] brms_2.10.0          Rcpp_1.0.2           here_0.1            
+##  [4] knitr_1.25           readxl_1.3.1         papaja_0.1.0.9709   
+##  [7] magrittr_1.5         forcats_0.4.0        stringr_1.4.0       
+## [10] dplyr_0.8.3          purrr_0.3.2          readr_1.3.1         
+## [13] tidyr_1.0.0          tibble_2.1.3         ggplot2_3.2.1       
+## [16] tidyverse_1.2.1      patchwork_0.0.1      hrbrthemes_0.6.0    
+## [19] bridgesampling_0.7-2
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] colorspace_1.4-1   ggridges_0.5.1     rsconnect_0.8.13  
-##  [4] rprojroot_1.3-2    markdown_0.9       base64enc_0.1-3   
-##  [7] rstudioapi_0.10    rstan_2.18.2       DT_0.5            
-## [10] mvtnorm_1.0-10     lubridate_1.7.4    xml2_1.2.0        
-## [13] codetools_0.2-16   extrafont_0.17     shinythemes_1.1.2 
-## [16] zeallot_0.1.0      bayesplot_1.6.0    jsonlite_1.6      
-## [19] Rttf2pt1_1.3.7     rjags_4-8          shiny_1.3.1       
-## [22] compiler_3.5.3     httr_1.4.0         backports_1.1.4   
-## [25] assertthat_0.2.1   lazyeval_0.2.2     cli_1.1.0         
-## [28] later_0.8.0        htmltools_0.3.6    prettyunits_1.0.2 
-## [31] tools_3.5.3        igraph_1.2.4       coda_0.19-2       
+##  [1] colorspace_1.4-1   ggridges_0.5.1     rsconnect_0.8.15  
+##  [4] rprojroot_1.3-2    markdown_1.1       base64enc_0.1-3   
+##  [7] rstudioapi_0.10    rstan_2.19.2       DT_0.9            
+## [10] lubridate_1.7.4    xml2_1.2.2         extrafont_0.17    
+## [13] shinythemes_1.1.2  zeallot_0.1.0      bayesplot_1.7.0   
+## [16] jsonlite_1.6       broom_0.5.2        Rttf2pt1_1.3.7    
+## [19] shiny_1.4.0        compiler_3.5.3     httr_1.4.1        
+## [22] backports_1.1.5    assertthat_0.2.1   Matrix_1.2-17     
+## [25] fastmap_1.0.1      lazyeval_0.2.2     cli_1.1.0         
+## [28] later_1.0.0        prettyunits_1.0.2  htmltools_0.4.0   
+## [31] tools_3.5.3        igraph_1.2.4.1     coda_0.19-3       
 ## [34] gtable_0.3.0       glue_1.3.1         reshape2_1.4.3    
-## [37] cellranger_1.1.0   vctrs_0.2.0        nlme_3.1-139      
-## [40] extrafontdb_1.0    crosstalk_1.0.0    xfun_0.7          
-## [43] ps_1.3.0           rvest_0.3.3        mime_0.7          
-## [46] miniUI_0.1.1.1     gtools_3.8.1       zoo_1.8-5         
-## [49] scales_1.0.0       colourpicker_1.0   hms_0.4.2         
-## [52] promises_1.0.1     Brobdingnag_1.2-6  parallel_3.5.3    
-## [55] inline_0.3.15      shinystan_2.5.0    yaml_2.2.0        
-## [58] gridExtra_2.3      StanHeaders_2.18.1 gdtools_0.1.8     
-## [61] loo_2.1.0.9000     stringi_1.4.3      dygraphs_1.1.1.6  
-## [64] pkgbuild_1.0.3     rlang_0.4.0        pkgconfig_2.0.2   
-## [67] matrixStats_0.54.0 evaluate_0.13      lattice_0.20-38   
-## [70] rstantools_1.5.1   htmlwidgets_1.3    tidyselect_0.2.5  
-## [73] processx_3.3.0     plyr_1.8.4         bookdown_0.9.17   
-## [76] R6_2.4.0           generics_0.0.2     pillar_1.4.0      
-## [79] haven_2.1.0        withr_2.1.2        xts_0.11-2        
-## [82] abind_1.4-5        modelr_0.1.4       crayon_1.3.4      
-## [85] rmarkdown_1.12     grid_3.5.3         callr_3.2.0       
-## [88] threejs_0.3.1      digest_0.6.18      xtable_1.8-3      
-## [91] httpuv_1.5.1       stats4_3.5.3       munsell_0.5.0     
-## [94] shinyjs_1.0
+## [37] cellranger_1.1.0   vctrs_0.2.0        nlme_3.1-141      
+## [40] extrafontdb_1.0    crosstalk_1.0.0    xfun_0.10         
+## [43] ps_1.3.0           rvest_0.3.4        mime_0.7          
+## [46] miniUI_0.1.1.1     lifecycle_0.1.0    gtools_3.8.1      
+## [49] zoo_1.8-6          scales_1.0.0       colourpicker_1.0  
+## [52] hms_0.5.1          promises_1.1.0     Brobdingnag_1.2-6 
+## [55] parallel_3.5.3     inline_0.3.15      shinystan_2.5.0   
+## [58] yaml_2.2.0         gridExtra_2.3      StanHeaders_2.19.0
+## [61] gdtools_0.2.1      loo_2.1.0.9001     stringi_1.4.3     
+## [64] dygraphs_1.1.1.6   pkgbuild_1.0.6     rlang_0.4.0       
+## [67] pkgconfig_2.0.3    systemfonts_0.1.1  matrixStats_0.55.0
+## [70] evaluate_0.14      lattice_0.20-38    rstantools_2.0.0  
+## [73] htmlwidgets_1.5.1  tidyselect_0.2.5   processx_3.4.1    
+## [76] plyr_1.8.4         bookdown_0.14      R6_2.4.0          
+## [79] generics_0.0.2     pillar_1.4.2       haven_2.1.1       
+## [82] withr_2.1.2        xts_0.11-2         abind_1.4-5       
+## [85] modelr_0.1.5       crayon_1.3.4       rmarkdown_1.16    
+## [88] grid_3.5.3         callr_3.3.2        threejs_0.3.1     
+## [91] digest_0.6.21      xtable_1.8-4       httpuv_1.5.2      
+## [94] stats4_3.5.3       munsell_0.5.0      shinyjs_1.0
 \end{verbatim}
 
 \newpage
@@ -1049,17 +1056,32 @@ Bürkner, P.-C. (2017). brms: An R package for bayesian multilevel models using 
 \leavevmode\hypertarget{ref-R-bridgesampling}{}%
 Gronau, Q. F., \& Singmann, H. (2017). \emph{Bridgesampling: Bridge sampling for marginal likelihoods and bayes factors}. Retrieved from \url{https://CRAN.R-project.org/package=bridgesampling}
 
+\leavevmode\hypertarget{ref-hutchison_does_2006}{}%
+Hutchison, J. J., \& Loomis, J. M. (2006). Does Energy Expenditure Affect the Perception of Egocentric Distance? A Failure to Replicate Experiment 1 of Proffitt, Stefanucci, Banton, and Epstein (2003). \emph{The Spanish Journal of Psychology}, \emph{9}(2), 332--339. doi:\href{https://doi.org/10.1017/S1138741600006235}{10.1017/S1138741600006235}
+
+\leavevmode\hypertarget{ref-kirsch_visual_2013}{}%
+Kirsch, W., \& Kunde, W. (2013). Visual near space is scaled to parameters of current action plans. \emph{Journal of Experimental Psychology. Human Perception and Performance}, \emph{39}(5), 1313--1325. doi:\href{https://doi.org/10.1037/a0031074}{10.1037/a0031074}
+
 \leavevmode\hypertarget{ref-R-metaviz}{}%
 Kossmeier, M., Tran, U. S., \& Voracek, M. (2018). \emph{Metaviz: Forest plots, funnel plots, and visual funnel plot inference for meta-analysis}. Retrieved from \url{https://CRAN.R-project.org/package=metaviz}
 
 \leavevmode\hypertarget{ref-R-BEST}{}%
 Kruschke, J. K., \& Meredith, M. (2017). \emph{BEST: Bayesian estimation supersedes the t-test}. Retrieved from \url{https://CRAN.R-project.org/package=BEST}
 
+\leavevmode\hypertarget{ref-linkenauger_virtual_2015}{}%
+Linkenauger, S. A., Bülthoff, H. H., \& Mohler, B. J. (2015). Virtual arm׳s reach influences perceived distances but only after experience reaching. \emph{Neuropsychologia}, \emph{70}, 393--401. doi:\href{https://doi.org/10.1016/j.neuropsychologia.2014.10.034}{10.1016/j.neuropsychologia.2014.10.034}
+
+\leavevmode\hypertarget{ref-meagher_costs_2014}{}%
+Meagher, B. R., \& Marsh, K. L. (2014). The costs of cooperation: Action-specific perception in the context of joint action. \emph{Journal of Experimental Psychology. Human Perception and Performance}, \emph{40}(1), 429--444. doi:\href{https://doi.org/10.1037/a0033850}{10.1037/a0033850}
+
 \leavevmode\hypertarget{ref-peters2008}{}%
 Peters, J. L., Sutton, A. J., Jones, D. R., Abrams, K. R., \& Rushton, L. (2008). Contour-enhanced meta-analysis funnel plots help distinguish publication bias from other causes of asymmetry. \emph{Journal of Clinical Epidemiology}, \emph{61}, 991--996. doi:\href{https://doi.org/10.1016/j.jclinepi.2007.11.010}{10.1016/j.jclinepi.2007.11.010}
 
 \leavevmode\hypertarget{ref-R-broom}{}%
 Robinson, D. (2017). \emph{Broom: Convert statistical analysis objects into tidy data frames}. Retrieved from \url{https://CRAN.R-project.org/package=broom}
+
+\leavevmode\hypertarget{ref-woods_various_2009}{}%
+Woods, A. J., Philbeck, J. W., \& Danoff, J. V. (2009). The Various Perceptions of Distance: An Alternative View of How Effort Affects Distance Judgments. \emph{Journal of Experimental Psychology. Human Perception and Performance}, \emph{35}(4), 1104--1117. doi:\href{https://doi.org/10.1037/a0013622}{10.1037/a0013622}
 
 
 

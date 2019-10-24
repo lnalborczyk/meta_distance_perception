@@ -24,15 +24,17 @@ affiliation:
     institution   : "Department of Experimental Clinical and Health Psychology, Ghent University"
   - id            : "3"
     institution   : "Univ. Paris Nanterre, Centre de Recherche sur le Sport et le Mouvement, Nanterre, France"
-bibliography: r-references.bib
+bibliography: [r-references.bib, meta_molto_etal.bib]
 figsintext: true
 class: doc
+link-citations: true
 output:
     papaja::apa6_pdf:
         toc: true
         toc_depth: 3
         highlight: default
         number_sections: true
+        latex_engine: xelatex
     html_document:
         toc: true
         toc_float: true
@@ -188,7 +190,13 @@ data.m %<>%
     mutate(article = paste0(.$authors, " (", .$year, ")") ) 
 ```
 
-# The meta-analytic model
+# Overall effect size estimation
+
+## Studies characteristics
+
+As @kirsch_visual_2013 used multiple effort manipulations in each of their studies, we aggregated their outcomes in order to obtain a single outcome per study. Thus, the resulting full dataset comprised 45 outcomes extracted from 37 studies from 20 articles (Nparticipants = 1035, Nobservations = 1299). In six other studies, the authors used several measures of distance perception, resulting in an effect size estimation (i.e., outcome) per measure [@hutchison_does_2006;@meagher_costs_2014;@woods_various_2009]. Such multiple-outcome studies weight more in a meta-analysis than single-outcome studies. To avoid this, we rearranged our full dataset by averaging all the outcomes from the same study to include only one outcome per study in our meta-analysis. We used this resulting single-outcome-study dataset (37 outcomes) to estimate the overall effect, the moderator effect of constraint category, and the moderator effect of the research design. It was impossible to estimate the moderator effects of the motor intention and measure after averaging the several outcomes from the same study. Thus, we used our full dataset for these analyses.
+
+## The meta-analytic model
 
 Let $y_{ij}$ be the effect size of the $i$th study in the $j$th article. Then, the 3-levels meta-analytic model can be written as:
 
@@ -339,7 +347,7 @@ bf_intercept <- bayes_factor(
     )
 ```
 
-The Bayes Factor is given by `bf_intercept$bf_median_based` (median estimate based on 100 simulations) and is approximately equal to $BF_{10} = \dfrac{1}{BF_{01}}$ = `r 1 / bf_intercept$bf_median_based`.
+The Bayes factor is given by `bf_intercept$bf_median_based` (median estimate based on 100 simulations) and is approximately equal to $BF_{10} = \dfrac{1}{BF_{01}}$ = `r 1 / bf_intercept$bf_median_based`.
 
 ## Forest plot of the main model
 
@@ -390,6 +398,8 @@ forest(
 ## Estimation by constraint manipulation
 
 We previously provided an estimate of the global effect size of action constraint on distance perception. Below, we estimate the effect size based on the action constraint manipulation by including `manipulation` as a categorical predictor in the model. We have three categories of manipulation that are: tool-use, weight, and effort. In this model the intercept represents the average effect size corresponding to the `Effort` manipulation, and the $\beta$s for `Tool-use` and `Weight` represent deviations from this condition.
+
+As different action constraints (e.g., backpack, tool-use) might influence distance perception through different mechanisms, we also computed the effect sizes for each constraint manipulation. We discarded @linkenauger_virtual_2015's article (i.e., four studies) from this analysis as their manipulation did not fit in any constraint category.
 
 ```{r, echo = TRUE, results = "hide"}
 data.constraint <- data %>% filter(manipulation != "other")
@@ -600,7 +610,7 @@ par(cex = 0.75, cex.lab = 0.75)
 plotPost(c1, credMass = 0.95, compVal = 0, col = "#b3cde0")
 ```
 
-We can then compute the Bayes Factor for this difference using the `hypothesis()` function.
+We can then compute the Bayes factor for this difference using the `hypothesis()` function.
 
 ```{r, echo = TRUE}
 hypothesis(
@@ -617,7 +627,7 @@ plotPost(c2, credMass = 0.95, compVal = 0, col = "#b3cde0")
 plotPost(c3, credMass = 0.95, compVal = 0, col = "#b3cde0")
 ```
 
-We then compute the Bayes Factor for these differences using the `hypothesis()` function, as previously.
+We then compute the Bayes factor for these differences using the `hypothesis()` function, as previously.
 
 ```{r, echo = TRUE}
 hypothesis(
@@ -711,7 +721,7 @@ Estimations of this model can be retrieved using the `tidy()` function.
 (bmod_space_est <- tidy(bmod_space, parameters = c("^b_", "^sd_"), prob = 0.95) )
 ```
 
-We can test whether the difference between the two conditions is equal to zero by computing a Bayes Factor using the `bayes_factor()` method.
+We can test whether the difference between the two conditions is equal to zero by computing a Bayes factor using the `bayes_factor()` method.
 
 ```{r, echo = TRUE, results = "hide"}
 bf_space <- bayes_factor(bmod1, bmod_space, repetitions = 1e2, cores = parallel::detectCores() )
